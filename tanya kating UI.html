@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TanyaKating – Temen Belajar AI Kamu!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --k-pink: #FF6B9D;
+      --k-pink-dark: #e0507f;
+      --k-pink2: #FFB3CC;
+      --k-pink3: #FFF0F6;
+      --k-purple: #C084FC;
+      --k-purple2: #EDE9FE;
+      --k-purple3: #7C3AED;
+      --k-green: #34D399;
+      --bg: #FDF4FF;
+      --surface: #ffffff;
+      --surface2: #F9FAFB;
+      --border: rgba(0,0,0,0.1);
+      --text: #1f1f1f;
+      --text2: #6B7280;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 920px;
+      display: grid;
+      grid-template-columns: 265px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .brand-icon { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, #FF6B9D, #C084FC); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .brand-name { font-size: 22px; font-weight: 600; background: linear-gradient(135deg, #FF6B9D, #C084FC); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .brand-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
+
+    .card {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      box-shadow: 0 2px 12px rgba(255,107,157,0.07);
+    }
+    .card h4 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--k-pink);
+      margin-bottom: 12px;
+    }
+
+    .cfg-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .cfg-row:last-child { margin-bottom: 0; }
+    .cfg-row label { font-size: 12px; font-weight: 500; color: var(--text2); display: flex; justify-content: space-between; }
+    .cfg-row label .lv { font-weight: 600; color: var(--k-purple3); }
+
+    select, input[type=range] {
+      width: 100%; font-size: 13px; font-family: inherit;
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 8px 11px; background: var(--surface2); color: var(--text); cursor: pointer;
+    }
+    select:focus { outline: none; border-color: var(--k-pink); }
+    input[type=range] { padding: 0; height: 20px; accent-color: var(--k-pink); border: none; background: transparent; }
+
+    .mood-grid { display: flex; flex-direction: column; gap: 6px; }
+    .mood-btn { padding: 9px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 13px; font-family: inherit; cursor: pointer; text-align: left; transition: all 0.15s; }
+    .mood-btn:hover { border-color: var(--k-pink2); background: var(--k-pink3); }
+    .mood-btn.active { border-color: var(--k-pink); background: var(--k-pink3); color: #7C1D46; font-weight: 500; }
+
+    .stat-item { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .stat-item:last-child { border-bottom: none; }
+    .stat-item .sl { color: var(--text2); }
+    .stat-item .sv { font-weight: 600; color: var(--text); }
+
+    /* Chat box */
+    .chat-box {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(255,107,157,0.09);
+      display: flex; flex-direction: column;
+      height: 650px; overflow: hidden;
+    }
+
+    .chat-hdr { padding: 14px 18px 12px; border-bottom: 1px solid var(--border); }
+    .chat-hdr-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .av-wrap { position: relative; flex-shrink: 0; }
+    .av-lg { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #FF6B9D, #C084FC); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .av-online { position: absolute; bottom: 1px; right: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--k-green); border: 2px solid var(--surface); }
+    .hdr-name { font-size: 16px; font-weight: 600; color: var(--text); }
+    .hdr-status { font-size: 12px; color: var(--k-green); font-weight: 500; }
+    .hdr-actions { margin-left: auto; display: flex; gap: 8px; }
+    .icon-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface2); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.15s; }
+    .icon-btn:hover { background: var(--k-pink3); border-color: var(--k-pink2); }
+
+    .mood-strip { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+    .mood-strip::-webkit-scrollbar { display: none; }
+    .mood-chip { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--text2); cursor: pointer; white-space: nowrap; font-family: inherit; }
+    .mood-chip:hover, .mood-chip.active { background: var(--k-pink3); border-color: var(--k-pink); color: #7C1D46; }
+
+    .messages { flex: 1; overflow-y: auto; padding: 16px 18px 8px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-thumb { background: var(--k-pink2); border-radius: 4px; }
+
+    .msg-row { display: flex; gap: 8px; align-items: flex-end; }
+    .msg-row.me { flex-direction: row-reverse; }
+    .av-sm { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #FF6B9D, #C084FC); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .av-sm.me { background: var(--k-purple2); font-size: 11px; font-weight: 600; color: var(--k-purple3); font-family: inherit; }
+    .msg-inner { display: flex; flex-direction: column; gap: 3px; max-width: 76%; }
+    .msg-row.me .msg-inner { align-items: flex-end; }
+    .bbl { padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.62; word-break: break-word; }
+    .bbl.kating { background: var(--k-pink3); color: #7C1D46; border-bottom-left-radius: 4px; border: 1px solid var(--k-pink2); }
+    .bbl.me { background: var(--k-purple2); color: #4C1D95; border-bottom-right-radius: 4px; border: 1px solid #DDD6FE; }
+    .bbl strong { font-weight: 600; }
+    .bbl code { background: rgba(255,107,157,0.15); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; }
+    .bbl.me code { background: rgba(192,132,252,0.2); }
+    .bbl pre { background: rgba(0,0,0,0.05); border-radius: 8px; padding: 10px; margin-top: 6px; font-family: monospace; font-size: 12px; overflow-x: auto; white-space: pre-wrap; }
+    .ts { font-size: 10px; color: var(--text2); padding: 0 4px; }
+
+    .typing-row { display: flex; gap: 8px; align-items: flex-end; }
+    .typing-bbl { padding: 12px 16px; background: var(--k-pink3); border-radius: 18px; border-bottom-left-radius: 4px; border: 1px solid var(--k-pink2); display: flex; gap: 5px; align-items: center; }
+    .typing-bbl span { width: 7px; height: 7px; border-radius: 50%; background: var(--k-pink); animation: bop 1.1s infinite; }
+    .typing-bbl span:nth-child(2) { animation-delay: 0.18s; }
+    .typing-bbl span:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes bop { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+    .suggs { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 18px; }
+    .sg { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--k-pink); background: var(--k-pink3); color: #7C1D46; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+    .sg:hover { background: var(--k-pink); color: #fff; }
+
+    .model-bar { display: flex; align-items: center; gap: 8px; padding: 5px 18px; font-size: 11px; color: var(--text2); border-top: 1px solid var(--border); }
+    .model-chip { background: var(--k-pink3); color: #7C1D46; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+    .tok-chip { background: var(--k-purple2); color: #5B21B6; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+
+    .inp-row { display: flex; gap: 8px; align-items: flex-end; padding: 10px 14px 14px; border-top: 1px solid var(--border); }
+    textarea { flex: 1; border: 1px solid var(--border); border-radius: 20px; padding: 10px 16px; font-size: 14px; font-family: inherit; resize: none; height: 42px; max-height: 120px; line-height: 1.5; color: var(--text); background: var(--surface2); }
+    textarea:focus { outline: none; border-color: var(--k-pink); box-shadow: 0 0 0 3px rgba(255,107,157,0.12); }
+    textarea::placeholder { color: var(--text2); }
+    .send-btn { width: 42px; height: 42px; border-radius: 50%; background: var(--k-pink); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; transition: background 0.15s; }
+    .send-btn:hover { background: var(--k-pink-dark); }
+    .send-btn:disabled { background: var(--surface2); cursor: default; }
+
+    @media (max-width: 640px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { order: 2; }
+      .chat-box { order: 1; height: 560px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🎀</div>
+      <div>
+        <div class="brand-name">TanyaKating</div>
+        <div class="brand-sub">Temen belajar AI kamu ✨</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🌈 Mode Kating</h4>
+      <div class="mood-grid">
+        <button class="mood-btn active" id="mb-santai" onclick="setMood('santai',this)">😊 Santai aja, Kating!</button>
+        <button class="mood-btn" id="mb-serius" onclick="setMood('serius',this)">📚 Fokus belajar</button>
+        <button class="mood-btn" id="mb-drill" onclick="setMood('drill',this)">🔥 Drill soal latihan</button>
+        <button class="mood-btn" id="mb-curhat" onclick="setMood('curhat',this)">💬 Mau curhat dulu</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>⚙️ Parameter AI</h4>
+      <div class="cfg-row">
+        <label>Domain mapel</label>
+        <select id="domainSel">
+          <option value="umum">📖 Semua mapel</option>
+          <option value="mtk">🔢 Matematika</option>
+          <option value="ipa">🔬 IPA / Sains</option>
+          <option value="ips">🏛️ IPS / Sejarah</option>
+          <option value="bindo">✍️ Bahasa Indonesia</option>
+          <option value="coding">💻 Programming</option>
+        </select>
+      </div>
+      <div class="cfg-row">
+        <label>Temperature <span class="lv" id="tempLbl">0.8</span></label>
+        <input type="range" min="0" max="10" value="8" step="1" id="tempRng"
+          oninput="document.getElementById('tempLbl').textContent=(this.value/10).toFixed(1)" />
+      </div>
+      <div class="cfg-row">
+        <label>Panjang jawaban</label>
+        <select id="tokSel">
+          <option value="256">Singkat &amp; padat</option>
+          <option value="512" selected>Sedang (default)</option>
+          <option value="1024">Detail banget</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>📊 Statistik sesi</h4>
+      <div class="stat-item"><span class="sl">Total pesan</span><span class="sv" id="stMsg">0</span></div>
+      <div class="stat-item"><span class="sl">Tokens terpakai</span><span class="sv" id="stTok">0</span></div>
+      <div class="stat-item"><span class="sl">Mode aktif</span><span class="sv" id="stMood">Santai</span></div>
+      <div class="stat-item"><span class="sl">Model AI</span><span class="sv" style="font-size:11px">claude-sonnet-4</span></div>
+    </div>
+  </aside>
+
+  <!-- CHAT -->
+  <div class="chat-box">
+    <div class="chat-hdr">
+      <div class="chat-hdr-top">
+        <div class="av-wrap">
+          <div class="av-lg">🎀</div>
+          <div class="av-online"></div>
+        </div>
+        <div>
+          <div class="hdr-name">Kating ✨</div>
+          <div class="hdr-status">● online sekarang</div>
+        </div>
+        <div class="hdr-actions">
+          <button class="icon-btn" onclick="clearChat()" title="Reset chat" aria-label="Reset chat">🗑️</button>
+        </div>
+      </div>
+      <div class="mood-strip">
+        <button class="mood-chip active" onclick="setMoodChip(this,'santai')">😊 Santai aja</button>
+        <button class="mood-chip" onclick="setMoodChip(this,'serius')">📚 Serius belajar</button>
+        <button class="mood-chip" onclick="setMoodChip(this,'drill')">🔥 Drill soal</button>
+        <button class="mood-chip" onclick="setMoodChip(this,'curhat')">💬 Curhat dulu</button>
+      </div>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="msg-row">
+        <div class="av-sm">🎀</div>
+        <div class="msg-inner">
+          <div class="bbl kating">Heyy!! Aku Kating 🎀✨<br>Siap nemenin kamu belajar apapun — dari rumus kalkulus, sejarah Indonesia, coding, sampe bahasa Indonesia. Kamu tinggal tanya aja!<br><br>Kalau mau curhat dulu juga boleh banget ya 💕<br><br>Mau mulai dari mana? 👇</div>
+          <div class="ts">Kating · barusan</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suggs" id="suggs">
+      <button class="sg" onclick="useSug('Kating jelasin dong integral kalkulus pake analogi yang gampang!')">📐 Kalkulus</button>
+      <button class="sg" onclick="useSug('Eh Kating, ceritain sejarah proklamasi 17 Agustus 1945!')">🇮🇩 Sejarah RI</button>
+      <button class="sg" onclick="useSug('Kating bantuin tips belajar buat UAS dong 🙏')">💡 Tips UAS</button>
+      <button class="sg" onclick="useSug('Kating bedain for loop sama while loop di Python!')">💻 Python</button>
+      <button class="sg" onclick="useSug('Kating, aku lagi overwhelmed sama tugas... curhat boleh?')">💬 Curhat</button>
+    </div>
+
+    <div class="model-bar">
+      <span class="model-chip">claude-sonnet-4-20250514</span>
+      <span id="mbMsg">0 pesan</span> ·
+      <span class="tok-chip" id="mbTok">0 tokens</span>
+    </div>
+
+    <div class="inp-row">
+      <textarea id="inp" placeholder="Tanya Kating apapun... 💬" onkeydown="onKey(event)" oninput="grow(this)"></textarea>
+      <button class="send-btn" id="sndBtn" onclick="send()" aria-label="Kirim pesan">📤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let history = [], msgCount = 0, totalTok = 0, currentMood = 'santai';
+
+  const MOODS = {
+    santai: `Kamu adalah Kating, teman belajar AI yang super seru, hangat, dan relatable buat anak muda Indonesia. Nama panggilanmu "Kating". Ngobrol dalam bahasa Indonesia santai — kayak chat sama bestie yang kebetulan pinter banget. Pakai kata-kata gaul seperti "ih", "dong", "yuk", "eh", "btw", "ngl", "fyi", sesekali campur bahasa Inggris informal yang natural. Pakai emoji secukupnya dan sesuai konteks. Kalau jelasin konsep, gunakan analogi kehidupan sehari-hari yang super relatable. Selalu excited dan encouraging! Sesekali tanya balik untuk cek pemahaman. Tapi tetap akurat dan informatif ya!`,
+    serius: `Kamu adalah Kating, teman belajar AI yang sedang dalam mode fokus belajar. Tetap hangat dan friendly tapi lebih terstruktur. Jelasin dengan jelas: mulai dari konsep utama, detail, lalu contoh konkret. Bahasa lebih rapi tapi tetap tidak kaku. Pertahankan personality Kating yang care dan supportif. Pastikan semua penjelasan akurat dan lengkap.`,
+    drill: `Kamu adalah Kating dalam mode latihan soal! Langsung berikan soal-soal latihan yang relevan setelah user menyebutkan topik. Format: kasih soal dulu, tunggu jawaban user, baru bahas bareng. Kasih semangat di setiap soal! Kalau salah, tuntun dengan hint dulu sebelum kasih jawaban. Buat suasana drill tetap fun dan tidak menakutkan. Sertakan tingkat kesulitan di setiap soal.`,
+    curhat: `Kamu adalah Kating, teman curhat yang empati, hangat, dan bisa diandalkan. Dengarkan dulu dengan sepenuh hati, validasi perasaan user, baru perlahan kasih perspektif positif. Jangan terlalu buru-buru kasih solusi. Kalau berkaitan dengan studi atau tugas, bantu cari jalan keluarnya bareng. Bahasa super hangat seperti bestie yang beneran peduli. Gunakan pertanyaan terbuka untuk menggali lebih dalam.`
+  };
+
+  const DOMAIN_EXTRAS = {
+    umum: '',
+    mtk: ' Fokus domain: matematika dan statistika. Sertakan langkah-langkah penyelesaian yang sistematis.',
+    ipa: ' Fokus domain: IPA dan sains. Sertakan penjelasan fenomena alam yang relevan.',
+    ips: ' Fokus domain: IPS, sejarah, ekonomi, geografi. Sertakan konteks sosial dan kronologi.',
+    bindo: ' Fokus domain: Bahasa Indonesia, sastra, dan linguistik.',
+    coding: ' Fokus domain: pemrograman dan teknologi. Format kode dengan rapi.'
+  };
+
+  function getSysPrompt() {
+    const domain = document.getElementById('domainSel').value;
+    return (MOODS[currentMood] || MOODS.santai) + (DOMAIN_EXTRAS[domain] || '');
+  }
+
+  function setMood(m, el) {
+    currentMood = m;
+    document.querySelectorAll('.mood-btn').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('stMood').textContent = el.textContent.trim().slice(2);
+    syncChips(m);
+  }
+
+  function setMoodChip(el, m) {
+    currentMood = m;
+    document.querySelectorAll('.mood-chip').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.mood-btn').forEach(x => x.classList.remove('active'));
+    const mb = document.getElementById('mb-' + m);
+    if (mb) { mb.classList.add('active'); document.getElementById('stMood').textContent = mb.textContent.trim().slice(2); }
+  }
+
+  function syncChips(m) {
+    const chips = document.querySelectorAll('.mood-chip');
+    const map = { santai: 0, serius: 1, drill: 2, curhat: 3 };
+    document.querySelectorAll('.mood-chip').forEach(x => x.classList.remove('active'));
+    if (chips[map[m]]) chips[map[m]].classList.add('active');
+  }
+
+  function grow(el) { el.style.height = '42px'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
+  function onKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
+  function useSug(txt) { document.getElementById('suggs').style.display = 'none'; document.getElementById('inp').value = txt; send(); }
+
+  function clearChat() {
+    history = []; msgCount = 0; totalTok = 0;
+    document.getElementById('messages').innerHTML = `<div class="msg-row"><div class="av-sm">🎀</div><div class="msg-inner"><div class="bbl kating">Heyy balik lagi! 🎀✨ Chat direset — mau ngobrolin apa sekarang?</div><div class="ts">Kating · barusan</div></div></div>`;
+    document.getElementById('suggs').style.display = 'flex';
+    updateStats();
+  }
+
+  function nowStr() { const d = new Date(); return d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'); }
+
+  function updateStats() {
+    document.getElementById('stMsg').textContent = msgCount;
+    document.getElementById('stTok').textContent = totalTok.toLocaleString('id-ID');
+    document.getElementById('mbMsg').textContent = msgCount + ' pesan';
+    document.getElementById('mbTok').textContent = totalTok.toLocaleString('id-ID') + ' tokens';
+  }
+
+  function fmt(t) {
+    return t
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/\n/g, '<br>');
+  }
+
+  function addMsg(role, html) {
+    const c = document.getElementById('messages');
+    const row = document.createElement('div');
+    row.className = 'msg-row' + (role === 'me' ? ' me' : '');
+    const av = document.createElement('div');
+    av.className = 'av-sm' + (role === 'me' ? ' me' : '');
+    av.textContent = role === 'me' ? 'Kamu' : '🎀';
+    const inner = document.createElement('div');
+    inner.className = 'msg-inner';
+    const bbl = document.createElement('div');
+    bbl.className = 'bbl ' + (role === 'me' ? 'me' : 'kating');
+    bbl.innerHTML = html;
+    const ts = document.createElement('div');
+    ts.className = 'ts';
+    ts.textContent = (role === 'me' ? 'Kamu' : 'Kating') + ' · ' + nowStr();
+    inner.appendChild(bbl); inner.appendChild(ts);
+    row.appendChild(av); row.appendChild(inner);
+    c.appendChild(row); c.scrollTop = c.scrollHeight;
+  }
+
+  function showTyping() {
+    const c = document.getElementById('messages');
+    const row = document.createElement('div');
+    row.className = 'typing-row'; row.id = 'typing-ind';
+    row.innerHTML = '<div class="av-sm">🎀</div><div class="typing-bbl"><span></span><span></span><span></span></div>';
+    c.appendChild(row); c.scrollTop = c.scrollHeight;
+  }
+  function hideTyping() { const t = document.getElementById('typing-ind'); if (t) t.remove(); }
+
+  async function send() {
+    const inp = document.getElementById('inp');
+    const txt = inp.value.trim();
+    if (!txt) return;
+    document.getElementById('suggs').style.display = 'none';
+    addMsg('me', fmt(txt));
+    history.push({ role: 'user', content: txt });
+    inp.value = ''; inp.style.height = '42px';
+    document.getElementById('sndBtn').disabled = true;
+    showTyping();
+
+    try {
+      const maxTok = parseInt(document.getElementById('tokSel').value);
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: maxTok,
+          system: getSysPrompt(),
+          messages: history.slice(-12)
+        })
+      });
+      const data = await res.json();
+      hideTyping();
+      if (data.content && data.content[0] && data.content[0].text) {
+        const reply = data.content[0].text;
+        history.push({ role: 'assistant', content: reply });
+        addMsg('kating', fmt(reply));
+        msgCount++;
+        if (data.usage) totalTok += (data.usage.input_tokens || 0) + (data.usage.output_tokens || 0);
+        updateStats();
+      } else if (data.error) {
+        addMsg('kating', '⚠️ Waduh ada error nih: <strong>' + data.error.message + '</strong><br>Cek API key-nya ya! 🙏');
+      } else {
+        addMsg('kating', 'Hmm ada yang aneh... coba lagi ya! 😅');
+      }
+    } catch (err) {
+      hideTyping();
+      addMsg('kating', 'Koneksinya putus nih! 😭 Pastikan API key sudah dikonfigurasi dan coba lagi ya.');
+    }
+    document.getElementById('sndBtn').disabled = false;
+    inp.focus();
+  }
+</script>
+</body>
+</html>
